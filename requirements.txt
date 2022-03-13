@@ -1,0 +1,6 @@
+requests
+beautifulsoup4
+levenshtein
+Pygments
+prompt_toolkit
+pytermgui
