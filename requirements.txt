@@ -4,3 +4,5 @@ levenshtein
 Pygments
 prompt_toolkit
 pytermgui
+windows-curses
+npyscreen
