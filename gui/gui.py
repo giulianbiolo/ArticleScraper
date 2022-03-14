@@ -1,6 +1,6 @@
 '''Questo è il modulo principale per la gestione dell'interfaccia grafica all'interno del progetto.'''
 import os
-import pytermgui as ptg
+import npyscreen
 
 
 def load_article_file(filename: str) -> tuple[str, str, str]:
@@ -21,108 +21,81 @@ def prettify_text(text: str) -> str:
     return text.replace("  ", "\n").replace("   ", "\n").replace("    ", "\n").replace(". ", ".\n")
 
 
-class GUI:
-    def __init__(self, filename: str, feeds: list[tuple[str, str]]) -> None:
-        '''Questo è il costruttore della classe GUI.'''
-        self.filename: str = filename
-        self.feeds: list[tuple[str, str]] = feeds
-        self.manager: ptg.WindowManager = ptg.WindowManager()
-        self.title, self.description, self.body = load_article_file(filename)
+npyscreen.NPSAppManaged.STARTING_FORM = "BROWSER"
 
-    def _run_reload_pipeline(self) -> bool:
-        '''Questo metodo esegue la pipeline del redraw della TUI.'''
-        try:
-            self._define_article_window()
-            self._define_browser_window()
-            self._define_v_split()
-            self._define_layout()
-        except Exception as e:
-            print("Errore: ", e)
-            return False
-        return True
 
-    def reload_article(self, filename: str) -> None:
-        '''Questo metodo carica un nuovo articolo.'''
-        self.manager.close(self.layout)
-        self.filename = filename
-        self.title, self.description, self.body = load_article_file(filename)
-        res: bool = self._run_reload_pipeline()
-        if res is False:
-            print("Errore durante il caricamento dell'articolo...")
+class GUI(npyscreen.NPSAppManaged):
+    '''Questa classe permette di gestire la GUI.'''
+
+    def onStart(self):
+        '''Questo metodo viene chiamato all'avvio dell'applicazione.'''
+        self.addForm("BROWSER", BrowserBox, name="Welcome To GBJournal!")
+        self.addForm("ARTICLE", ArticleBox, name="Welcome To GBJournal!")
+
+
+class BrowserBox(npyscreen.ActionForm):
+    '''Questa classe gestisce il form di ricerca degli articoli.'''
+
+    def create(self):
+        '''Questo è il metodo di definizione e creazione degli elementi grafici della pagina Browser.'''
+        self.browsing_box = self.add(
+            npyscreen.TitleFilename, name="Filename:", w_id="filename")
+        self.browsing_btn = self.add(
+            npyscreen.ButtonPress, name="Browse", w_id="browse")
+        self.browsing_box.set_relyx(self.browsing_box.rely + 1, self.browsing_box.relx + 4)
+        self.browsing_btn.set_relyx(self.browsing_btn.rely + 2, self.browsing_btn.relx + 4)
+        self.browsing_btn.whenPressed = self.on_ok
+
+    def on_ok(self):
+        '''Questo metodo viene chiamato quando viene premuto il pulsante OK / Browse.'''
+        filename: str = self.browsing_box.value
+        if filename == "":
+            npyscreen.notify_confirm("Please enter a valid filename...")
             return
-        self.manager.add(self.layout)
-        self.manager.alert("Articolo caricato!")
-
-    def _define_article_window(self) -> None:
-        '''Questo metodo definisce la finestra dell'articolo.'''
-        self.article_window = ptg.Window(
-            ptg.Label("[15 bold inverse]" + self.title),
-            ptg.Label(),
-            ptg.Label("[248 bold inverse]" + self.description),
-            ptg.Label(),
-            ptg.Label("[248]" + self.body),
-        )
-        self.article_window.allow_fullscreen = True
-        self.article_window.overflow = ptg.Overflow.RESIZE
-
-    def _define_browser_window(self) -> None:
-        '''Questo metodo definisce la finestra del browser.'''
-        self.article_buttons: list = []
-        self.browser_window = ptg.Window(
-            ptg.Label("[248 bold inverse]Feeds"),
-            ptg.Label(),
-        )
-        self.browser_window._add_widget(ptg.Button("Articolo 1", lambda *_: self.reload_article("articolo.txt")))
-        self.browser_window._add_widget(ptg.Label())
-        for title, link in self.feeds:
-            self.browser_window._add_widget(ptg.Button(str(title), lambda *_: self.reload_article(str(link))))
-            self.browser_window._add_widget(ptg.Label())
-        
-        #self.browser_window.set_widgets(self.article_buttons)
-        self.browser_window.allow_fullscreen = True
-        self.browser_window.overflow = ptg.Overflow.RESIZE
-
-    def _define_v_split(self) -> None:
-        '''Questo metodo definisce il divisorio verticale della TUI.'''
-        self.v_split = ptg.Splitter(
-            self.article_window,
-            self.browser_window,
-        )
-
-    def _define_layout(self) -> None:
-        '''Questo metodo definisce il wrapper generale della TUI.'''
-        self.layout = ptg.Window(self.v_split)
-        self.layout.is_noresize = False
-        self.layout.allow_fullscreen = True
-        self.layout.overflow = ptg.Overflow.RESIZE
-
-    def run(self) -> None:
-        '''Questo metodo avvia l'interfaccia grafica.'''
-        res: bool = self._run_reload_pipeline()
-        if res is False:
-            print("Errore durante il caricamento dell'articolo...")
+        if not os.path.isfile(filename):
+            npyscreen.notify_confirm("File not found...")
             return
-        self.manager.add(self.layout)
-        self.manager.run()
+        title, description, body = load_article_file(filename)
+        self.parentApp.getForm("ARTICLE").title_box.value = title
+        self.parentApp.getForm("ARTICLE").description_box.value = description
+        self.parentApp.getForm("ARTICLE").body_box.values = body.split("\n")
+        self.parentApp.switchForm("ARTICLE")
+
+
+class ArticleBox(npyscreen.ActionForm):
+    '''Questa classe gestisce il form di visualizzazione articoli.'''
+
+    def create(self):
+        '''Questo è il metodo di definizione e creazione degli elementi grafici della pagina Article.'''
+        self.title_box = self.add(
+            npyscreen.TitleFixedText, name="Title:", w_id="title")
+        self.description_box = self.add(
+            npyscreen.TitleFixedText, name="Description:", w_id="description")
+        self.body_box = self.add(npyscreen.Pager, name="Body:", w_id="body")
+        self.title_box.set_relyx(self.title_box.rely, self.title_box.relx + 10)
+        self.description_box.set_relyx(self.description_box.rely + 1, self.description_box.relx + 10)
+        self.body_box.set_relyx(self.body_box.rely + 2, self.body_box.relx + 2)
+        self.add_handlers({
+            "^B": self.on_back,
+        })
+
+    def on_ok(self):
+        '''Questo metodo gestisce la funzionalità del tasto OK.'''
+        self.on_back(None)
+
+    def on_back(self, _):
+        '''Questo metodo riporta al browser file.'''
+        self.parentApp.getForm("BROWSER").browsing_box.value = ""
+        self.parentApp.switchForm("BROWSER")
+
+    def on_quit(self, _):
+        '''Questo metodo gestisce la chiusura dell'applicazione.'''
+        self.parentApp.switchForm(None)
 
 
 def test():
     '''Questo metodo testa la classe GUI.'''
-    from time import time as now
-    start_time: float = now()
-    gui = GUI(
-        "articolo.txt",
-        [
-            ("Articolo 1", "articolo.txt"),
-            ("Articolo 2", "articolo2.txt"),
-            ("Articolo 3", "articolo3.txt"),
-            ("Articolo 4", "articolo4.txt")
-        ]
-    )
-    end_time: float = now()
-    print(f"Tempo di esecuzione: {str(end_time - start_time)} secondi.")
-    gui.run()
-    del gui
+    GUI().run()
 
 
 if __name__ == "__main__":
