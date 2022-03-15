@@ -1,6 +1,7 @@
 '''Questo è il modulo principale per la gestione dell'interfaccia grafica all'interno del progetto.'''
 import os
 import npyscreen
+import curses
 
 
 def load_article_file(filename: str) -> tuple[str, str, str]:
@@ -39,8 +40,10 @@ class BrowserBox(npyscreen.ActionForm):
 
     def create(self):
         '''Questo è il metodo di definizione e creazione degli elementi grafici della pagina Browser.'''
+        #self.browsing_box = self.add(
+        #    npyscreen.TitleFilename, name="Filename:", w_id="filename")
         self.browsing_box = self.add(
-            npyscreen.TitleFilename, name="Filename:", w_id="filename")
+            TitledAutoCompletionBox, name="Filename: ", w_id="filename")
         self.browsing_btn = self.add(
             npyscreen.ButtonPress, name="Browse", w_id="browse")
         self.browsing_box.set_relyx(self.browsing_box.rely + 1, self.browsing_box.relx + 4)
@@ -94,6 +97,90 @@ class ArticleBox(npyscreen.ActionForm):
     def on_quit(self, _):
         '''Questo metodo gestisce la chiusura dell'applicazione.'''
         self.parentApp.switchForm(None)
+
+
+class AutoCompletionBox(npyscreen.Autocomplete):
+    '''Questa classe gestisce il funzionamento dell'autocompletamento degli articoli.'''
+    
+    def auto_complete(self, _):
+        '''Questo è l'override del metodo che gestisce i feed degli autocompletamenti.'''
+        # expand ~
+        self.value = os.path.expanduser(self.value)
+
+        for i in range(1):
+            dir, fname = os.path.split(self.value)
+            # Let's have absolute paths.
+            dir = os.path.abspath(dir)
+    
+            if self.value == '':
+                self.value=dir
+                break
+    
+            try: 
+                flist = os.listdir(dir)
+            except:
+                self.show_brief_message("Can't read directory!")
+                break
+
+            flist = [os.path.join(dir, x) for x in flist]
+            possibilities = list(filter(
+                (lambda x: os.path.split(x)[1].startswith(fname)), flist
+                ))
+            # Le Possibilities sono i /path/vari/.../[Possibility[i]]
+
+            if len(possibilities) is 0:
+                # can't complete
+                curses.beep()
+                break
+
+            if len(possibilities) is 1:
+                if self.value != possibilities[0]:
+                    self.value = possibilities[0]
+                if os.path.isdir(self.value) \
+                    and not self.value.endswith(os.sep):
+                    self.value = self.value + os.sep
+                else:
+                    if not os.path.isdir(self.value):
+                        self.h_exit_down(None)
+                    break
+
+            if len(possibilities) > 1:
+                filelist = possibilities
+            else:
+                filelist = flist #os.listdir(os.path.dirname(self.value))
+    
+            filelist = list(map((lambda x: os.path.normpath(os.path.join(self.value, x))), filelist))
+            files_only = []
+            dirs_only = []
+
+            if fname.startswith('.'):
+                filelist = list(filter((lambda x: os.path.basename(x).startswith('.')), filelist))
+            else:
+                filelist = list(filter((lambda x: not os.path.basename(x).startswith('.')), filelist))
+
+            for index1 in range(len(filelist)):
+                if os.path.isdir(filelist[index1]) and not filelist[index1].endswith(os.sep):
+                    filelist[index1] = filelist[index1] + os.sep
+
+                if os.path.isdir(filelist[index1]):
+                    dirs_only.append(filelist[index1])
+            
+                else:
+                    files_only.append(filelist[index1])
+    
+            dirs_only.sort()
+            files_only.sort()
+            combined_list = dirs_only + files_only
+            combined_list.insert(0, self.value)
+            self.value = combined_list[self.get_choice(combined_list)]
+            break
+        os.path.normcase(self.value)
+        self.cursor_position=len(self.value)
+
+
+class TitledAutoCompletionBox(npyscreen.TitleFilename):
+    '''Questa è la classe wrapper con testo dell'autocompletamento personalizzato.'''
+    _entry_type = AutoCompletionBox
 
 
 def test():
