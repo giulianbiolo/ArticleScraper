@@ -29,6 +29,7 @@ class GUI(npyscreen.NPSAppManaged):
 
     def onStart(self):
         '''Questo metodo viene chiamato all'avvio dell'applicazione.'''
+        npyscreen.setTheme(npyscreen.Themes.ElegantTheme)
         self.addForm("BROWSER", BrowserBox, name="Welcome To GBJournal!")
         self.addForm("ARTICLE", ArticleBox, name="Welcome To GBJournal!")
 
@@ -73,7 +74,9 @@ class ArticleBox(npyscreen.ActionForm):
             npyscreen.TitleFixedText, name="Description:", w_id="description")
         self.body_box = self.add(npyscreen.Pager, name="Body:", w_id="body")
         self.title_box.set_relyx(self.title_box.rely, self.title_box.relx + 10)
+        self.title_box.max_height = 3
         self.description_box.set_relyx(self.description_box.rely + 1, self.description_box.relx + 10)
+        self.description_box.max_height = 5
         self.body_box.set_relyx(self.body_box.rely + 2, self.body_box.relx + 2)
         self.add_handlers({
             "^B": self.on_back,
