@@ -2,6 +2,7 @@
 from modules.Ansa import Ansa
 from modules.WallStreetJournal import WSJ
 from modules.Article import Article
+from modules.Feed import Feed
 from gui import GUI
 
 
@@ -31,7 +32,7 @@ def main() -> None:
     #article: Article = wsj.load_article(feeds[0][0])  # Carica un articolo
     #article.print()  # Stampa l'articolo
 
-    all_feeds: list[tuple] = []
+    all_feeds: list[Feed] = []
     all_feeds.extend(ansa.find_all())
     #all_feeds.extend(wsj.find_all())
     gui: GUI = GUI(all_feeds)

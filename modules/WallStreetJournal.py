@@ -1,6 +1,7 @@
 '''Questo è il modulo che gestisce lo scraping di wsj.com.'''
 import requests
 from modules.Article import Article
+from modules.Feed import Feed
 import feedparser
 from bs4 import BeautifulSoup
 import Levenshtein
@@ -24,7 +25,7 @@ def is_wsj_article(self, link: str) -> bool:
 class WSJ:
     def __init__(self) -> None:
         '''Questo è il costruttore della classe.'''
-        self.feeds: list[tuple(str, str)] = []  # (link, titolo)
+        self.feeds: list[Feed] = []  # (link, titolo, lingua)
         for page in pages:
             self._parse_page(page)
         self.articles_history: list[Article] = []
@@ -41,7 +42,7 @@ class WSJ:
         '''Questo metodo ritorna i link parsati.'''
         feed = feedparser.parse(page)
         for entry in feed['entries']:
-            self.feeds.append((entry['link'], entry['title']))
+            self.feeds.append(Feed(entry['link'], entry['title'], "en"))
 
     def load_article(self, link: str) -> Article:
         '''Questo metodo ritorna un articolo.'''
@@ -59,19 +60,20 @@ class WSJ:
             Article(title, description, content, author, date, link))
         return self.articles_history[-1]
 
-    def find_from_title(self, query_title: str) -> list[tuple]:
+    def find_from_title(self, query_title: str) -> list[Feed]:
         '''Questo metodo ritorna i link che contengono un determinato titolo.'''
         # TODO: Implementare una funzione che trova gli articoli più attinenti migliore
-        feeds: list[tuple] = []
-        for link, title in self.feeds:
-            if Levenshtein.ratio(query_title, title) > 0.7:
-                feeds.append((link, title))
-            for word in title.split(' '):
+        # TODO: f(query_title:str, feeds:list[Feed]) -> affine_feeds : list[Feed]
+        affine_feeds: list[Feed] = []
+        for feed in self.feeds:
+            if Levenshtein.ratio(query_title, feed.title) > 0.7:
+                affine_feeds.append(feed)
+            for word in feed.title.split(' '):
                 if Levenshtein.ratio(query_title, word) > 0.7:
-                    feeds.append((link, title))
-        return feeds
+                    affine_feeds.append(feed)
+        return affine_feeds
 
-    def find_all(self) -> list[tuple]:
+    def find_all(self) -> list[Feed]:
         '''Questo metodo, dato un titolo, trova gli articoli più attinenti.'''
         return self.feeds
 
