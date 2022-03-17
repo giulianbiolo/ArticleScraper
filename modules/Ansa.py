@@ -21,6 +21,11 @@ pages: list[str] = [
 ]
 
 
+def is_ansa_article(link: str) -> bool:
+    '''Questo metodo ritorna True se l'articolo è di Ansa.'''
+    return link.find('ansa.it') != -1
+
+
 class Ansa:
     def __init__(self) -> None:
         '''Questo è il costruttore della classe.'''
@@ -68,6 +73,10 @@ class Ansa:
                 if Levenshtein.ratio(query_title, word) > 0.7:
                     feeds.append((link, title))
         return feeds
+
+    def find_all(self) -> list[tuple]:
+        '''Questo metodo, dato un titolo, trova gli articoli più attinenti.'''
+        return self.feeds
 
 
 def test() -> None:

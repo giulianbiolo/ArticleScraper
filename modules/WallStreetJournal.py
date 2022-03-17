@@ -16,6 +16,11 @@ pages: list[str] = [
 ]
 
 
+def is_wsj_article(self, link: str) -> bool:
+    '''Questo metodo ritorna True se l'articolo è di wsj.com.'''
+    return link.find('wsj.com') != -1
+
+
 class WSJ:
     def __init__(self) -> None:
         '''Questo è il costruttore della classe.'''
@@ -56,6 +61,7 @@ class WSJ:
 
     def find_from_title(self, query_title: str) -> list[tuple]:
         '''Questo metodo ritorna i link che contengono un determinato titolo.'''
+        # TODO: Implementare una funzione che trova gli articoli più attinenti migliore
         feeds: list[tuple] = []
         for link, title in self.feeds:
             if Levenshtein.ratio(query_title, title) > 0.7:
@@ -64,6 +70,10 @@ class WSJ:
                 if Levenshtein.ratio(query_title, word) > 0.7:
                     feeds.append((link, title))
         return feeds
+
+    def find_all(self) -> list[tuple]:
+        '''Questo metodo, dato un titolo, trova gli articoli più attinenti.'''
+        return self.feeds
 
 
 def test() -> None:
