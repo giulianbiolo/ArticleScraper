@@ -4,6 +4,7 @@ import npyscreen
 from modules.Article import Article
 from modules.Ansa import is_ansa_article
 from modules.WallStreetJournal import is_wsj_article
+import Levenshtein
 
 logger = None
 
@@ -148,8 +149,17 @@ class AutoCompletionBox(npyscreen.Autocomplete):
         '''Questo è l'override del metodo che gestisce i feed degli autocompletamenti.'''
         feeds_list = []
         feeds = self.find_parent_app().feeds
-        for _, title in feeds:
-            feeds_list.append(title)
+        search: str = self.value.strip().lower()
+        if search != "":
+            for link, title in feeds:
+                for word in title.strip().lower().split():
+                    # TODO: Migliorare l'algoritmo di ricerca
+                    if Levenshtein.ratio(word, search) > 0.8:
+                        feeds_list.append(title)
+                        break
+        else:       
+            for _, title in feeds:
+                feeds_list.append(title)
         self.value = feeds_list[self.get_choice(feeds_list)]
         for link, title in feeds:
             if title == self.value:
