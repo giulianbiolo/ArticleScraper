@@ -1,8 +1,7 @@
 requests
 beautifulsoup4
 levenshtein
-Pygments
-prompt_toolkit
-pytermgui
+feedparser
 windows-curses
 npyscreen
+spacy
