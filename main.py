@@ -2,7 +2,7 @@
 from modules.Ansa import Ansa
 from modules.WallStreetJournal import WSJ
 from modules.Article import Article
-from gui.gui import GUI
+from gui import GUI
 
 
 def main() -> None:

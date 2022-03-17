@@ -89,12 +89,16 @@ class BrowserBox(npyscreen.ActionForm):
 
     def on_ok(self):
         '''Questo metodo viene chiamato quando viene premuto il pulsante OK / Browse.'''
-        article_link: str = self.browsing_box.value
-        if article_link == "":
+        article_title: str = self.browsing_box.value
+        try:
+            article_link: str = [link for link, title in self.find_parent_app().feeds if article_title == title][0]
+        except:
+            article_link: str = ""
+        if article_title == "":
             npyscreen.notify_confirm("Please enter a valid filename...")
             return
-        if article_link not in [link for link, _ in self.find_parent_app().feeds]:
-            npyscreen.notify_confirm("File not found...")
+        if article_link == "":
+            npyscreen.notify_confirm("Article not found...")
             return
         title, description, body = load_article(article_link)
         self.parentApp.getForm("ARTICLE").title_box.value = title
@@ -151,25 +155,23 @@ class AutoCompletionBox(npyscreen.Autocomplete):
         feeds = self.find_parent_app().feeds
         search: str = self.value.strip().lower()
         if search != "":
-            for link, title in feeds:
+            for _, title in feeds:
                 for word in title.strip().lower().split():
                     # TODO: Migliorare l'algoritmo di ricerca
                     if Levenshtein.ratio(word, search) > 0.8:
                         feeds_list.append(title)
                         break
-        else:       
+        else:
             for _, title in feeds:
                 feeds_list.append(title)
         self.value = feeds_list[self.get_choice(feeds_list)]
-        for link, title in feeds:
-            if title == self.value:
-                self.value = link
         self.cursor_position = len(self.value)
 
 
 class TitledAutoCompletionBox(npyscreen.TitleFilename):
     '''Questa è la classe wrapper con testo dell'autocompletamento personalizzato.'''
     _entry_type = AutoCompletionBox
+
 
 
 def test():
