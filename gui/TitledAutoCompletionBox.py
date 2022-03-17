@@ -1,3 +1,4 @@
+'''Questo modulo implementa la classe della finestra di autocompletamento.'''
 from modules.Feed import Feed
 import npyscreen
 import Levenshtein

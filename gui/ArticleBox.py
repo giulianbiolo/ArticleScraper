@@ -1,3 +1,4 @@
+'''Questo modulo implementa la classe della finestra di visualizzazione dell'articolo.'''
 import npyscreen
 
 
