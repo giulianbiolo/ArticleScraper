@@ -1,7 +1,7 @@
 '''Questo modulo implementa la classe della finestra di autocompletamento.'''
 from modules.Feed import Feed
+from NLP import get_affine_feeds
 import npyscreen
-import Levenshtein
 
 
 class AutoCompletionBox(npyscreen.Autocomplete):
@@ -9,20 +9,22 @@ class AutoCompletionBox(npyscreen.Autocomplete):
 
     def auto_complete(self, _):
         '''Questo è l'override del metodo che gestisce i feed degli autocompletamenti.'''
-        feeds_list: list[Feed] = []
+        feeds_list: list[str] = []
         feeds: list[Feed] = self.find_parent_app().feeds
-        search: str = self.value.strip().lower()
+        search: str = self.value.strip()
         if search != "":
-            for feed in feeds:
-                for word in feed.title.strip().lower().split():
-                    # TODO: Migliorare l'algoritmo di ricerca
-                    # TODO: f(query_title:str, feeds:list[tuple[link:str,title:str]]) -> affine_feeds : list[tuple[link:str, title:str]]
-                    if Levenshtein.ratio(word, search) > 0.8:
-                        feeds_list.append(feed.title)
-                        break
+            entire_feeds_list = get_affine_feeds(search, feeds)
+            feeds_list = [feed.title for feed in entire_feeds_list]
         else:
-            for feed in feeds:
-                feeds_list.append(feed.title)
+            feeds_list = [feed.title for feed in feeds]
+        if len(feeds_list) == 0:
+            self.value = ""
+            self.cursor_position = 0
+            return
+        if len(feeds_list) == 1:
+            self.value = feeds_list[0]
+            self.cursor_position = len(self.value)
+            return
         self.value = feeds_list[self.get_choice(feeds_list)]
         self.cursor_position = len(self.value)
 

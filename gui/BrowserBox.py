@@ -29,17 +29,15 @@ class BrowserBox(npyscreen.ActionForm):
         try:
             feed: Feed = [feed for feed in self.find_parent_app().feeds if feed.title == article_title][0]
             article_link: str = feed.link
-            article_lang: str = feed.lang
         except:
             article_link: str = ""
-            article_lang: str = "it"
         if article_title == "":
             npyscreen.notify_confirm("Please enter a valid filename...")
             return
         if article_link == "":
             npyscreen.notify_confirm("Article not found...")
             return
-        title, description, body = load_article(article_link, article_lang)
+        title, description, body = load_article(article_link)
         self.parentApp.getForm("ARTICLE").title_box.value = title
         self.parentApp.getForm("ARTICLE").description_box.value = description
         self.parentApp.getForm("ARTICLE").body_box.values = body.split("\n")

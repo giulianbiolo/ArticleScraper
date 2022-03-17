@@ -2,7 +2,7 @@
 from modules.Article import Article
 from modules.Ansa import is_ansa_article
 from modules.WallStreetJournal import is_wsj_article
-from nlp import prettify_text
+from NLP import prettify_text
 
 
 def load_article_file(filename: str) -> tuple[str, str, str]:
@@ -18,7 +18,7 @@ def load_article_file(filename: str) -> tuple[str, str, str]:
     return title, description, prettify_text(body)
 
 
-def load_article(link: str, lang: str = "it") -> tuple[str, str, str]:
+def load_article(link: str) -> tuple[str, str, str]:
     '''Questo metodo carica un articolo dal link.'''
     title: str = ""
     description: str = ""
@@ -35,5 +35,5 @@ def load_article(link: str, lang: str = "it") -> tuple[str, str, str]:
     if article is not None:
         title = article.title
         description = article.description
-        body = prettify_text(article.content, lang)
+        body = prettify_text(article.content)
     return title, description, body

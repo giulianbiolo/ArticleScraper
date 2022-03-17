@@ -4,4 +4,3 @@ levenshtein
 feedparser
 windows-curses
 npyscreen
-spacy
