@@ -1,10 +1,10 @@
 '''Questo è il modulo che gestisce lo scraping di Ansa.it.'''
-import requests
+from requests import get as reqget
+import threading
 from modules.Article import Article
-from modules.Feed import Feed
-import feedparser
+from modules.WebScraper import WebScraper
 from bs4 import BeautifulSoup
-import Levenshtein
+
 
 pages: list[str] = [
     'https://www.ansa.it/sito/ansait_rss.xml',                         # Homepage
@@ -27,13 +27,8 @@ def is_ansa_article(link: str) -> bool:
     return link.find('ansa.it') != -1
 
 
-class Ansa:
-    def __init__(self) -> None:
-        '''Questo è il costruttore della classe.'''
-        self.feeds: list[Feed] = []  # (link, titolo)
-        for page in pages:
-            self._parse_page(page)
-        self.articles_history: list[Article] = []
+class Ansa(WebScraper):
+    '''Questa classe implementa il webscraper di Ansa.it.'''
 
     def __str__(self) -> str:
         '''Questo metodo ritorna una stringa che rappresenta l'oggetto.'''
@@ -43,15 +38,24 @@ class Ansa:
         '''Questo metodo ritorna una stringa che rappresenta l'oggetto.'''
         return str('<Ansa_object>')
 
+    def _load_feeds(self) -> None:
+        '''Questo metodo carica i feeds.'''
+        threads = []
+        for page in pages:
+            threads.append(threading.Thread(
+                target=self._parse_page, args=(page,)))
+        for thread in threads:
+            thread.start()
+        for thread in threads:
+            thread.join()
+
     def _parse_page(self, page) -> None:
         '''Questo metodo ritorna i link parsati.'''
-        feed = feedparser.parse(page)
-        for entry in feed['entries']:
-            self.feeds.append(Feed(entry['link'], entry['title'], "it"))
+        super()._parse_page(page, "it")
 
     def load_article(self, link: str) -> Article:
         '''Questo metodo ritorna il contenuto dell'articolo.'''
-        article = requests.get(link.strip(), headers={'User-Agent': 'Custom'})
+        article = reqget(link.strip(), headers={'User-Agent': 'Custom'})
         soup = BeautifulSoup(article.text, 'html.parser')
         title: str = soup.find('h1', {'class': 'news-title'}).text.strip()
         description: str = soup.find('h2', {'class': 'news-stit'}).text.strip()
@@ -62,23 +66,6 @@ class Ansa:
         self.articles_history.append(
             Article(title, description, content, author, date, link))
         return self.articles_history[-1]
-
-    def find_from_title(self, query_title: str) -> list[Feed]:
-        '''Questo metodo, dato un titolo, trova gli articoli più attinenti.'''
-        # TODO: Implementare una funzione che trova gli articoli più attinenti migliore
-        # TODO: f(query_title:str, feeds:list[Feed]) -> affine_feeds : list[Feed]
-        affine_feeds: list[Feed] = []
-        for feed in self.feeds:
-            if Levenshtein.ratio(query_title, feed.title) > 0.7:
-                affine_feeds.append(feed)
-            for word in feed.title.split(' '):
-                if Levenshtein.ratio(query_title, word) > 0.7:
-                    affine_feeds.append(feed)
-        return affine_feeds
-
-    def find_all(self) -> list[Feed]:
-        '''Questo metodo, dato un titolo, trova gli articoli più attinenti.'''
-        return self.feeds
 
 
 def test() -> None:

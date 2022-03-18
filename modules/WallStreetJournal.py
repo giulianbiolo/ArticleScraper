@@ -1,10 +1,10 @@
 '''Questo è il modulo che gestisce lo scraping di wsj.com.'''
-import requests
+from requests import get as reqget
+import threading
 from modules.Article import Article
-from modules.Feed import Feed
-import feedparser
 from bs4 import BeautifulSoup
-import Levenshtein
+
+from modules.WebScraper import WebScraper
 
 
 pages: list[str] = [
@@ -22,13 +22,8 @@ def is_wsj_article(link: str) -> bool:
     return link.find('wsj.com') != -1
 
 
-class WSJ:
-    def __init__(self) -> None:
-        '''Questo è il costruttore della classe.'''
-        self.feeds: list[Feed] = []  # (link, titolo, lingua)
-        for page in pages:
-            self._parse_page(page)
-        self.articles_history: list[Article] = []
+class WSJ(WebScraper):
+    '''Questa classe implementa il webscraper di wsj.com.'''
 
     def __str__(self) -> str:
         '''Questo metodo ritorna una stringa che rappresenta l'oggetto.'''
@@ -38,15 +33,24 @@ class WSJ:
         '''Questo metodo ritorna una stringa che rappresenta l'oggetto.'''
         return str('<WSJ_object>')
 
+    def _load_feeds(self) -> None:
+        '''Questo metodo carica i feeds.'''
+        threads = []
+        for page in pages:
+            threads.append(threading.Thread(
+                target=self._parse_page, args=(page,)))
+        for thread in threads:
+            thread.start()
+        for thread in threads:
+            thread.join()
+
     def _parse_page(self, page) -> None:
         '''Questo metodo ritorna i link parsati.'''
-        feed = feedparser.parse(page)
-        for entry in feed['entries']:
-            self.feeds.append(Feed(entry['link'], entry['title'], "en"))
+        super()._parse_page(page, "en")
 
     def load_article(self, link: str) -> Article:
         '''Questo metodo ritorna un articolo.'''
-        article: str = requests.get(link.strip(), headers={
+        article: str = reqget(link.strip(), headers={
                                     'User-Agent': 'Custom'})
         soup: BeautifulSoup = BeautifulSoup(article.text, 'html.parser')
         title: str = soup.find('h1', {'itemprop': 'headline'}).text.strip()
@@ -59,23 +63,6 @@ class WSJ:
         self.articles_history.append(
             Article(title, description, content, author, date, link))
         return self.articles_history[-1]
-
-    def find_from_title(self, query_title: str) -> list[Feed]:
-        '''Questo metodo ritorna i link che contengono un determinato titolo.'''
-        # TODO: Implementare una funzione che trova gli articoli più attinenti migliore
-        # TODO: f(query_title:str, feeds:list[Feed]) -> affine_feeds : list[Feed]
-        affine_feeds: list[Feed] = []
-        for feed in self.feeds:
-            if Levenshtein.ratio(query_title, feed.title) > 0.7:
-                affine_feeds.append(feed)
-            for word in feed.title.split(' '):
-                if Levenshtein.ratio(query_title, word) > 0.7:
-                    affine_feeds.append(feed)
-        return affine_feeds
-
-    def find_all(self) -> list[Feed]:
-        '''Questo metodo, dato un titolo, trova gli articoli più attinenti.'''
-        return self.feeds
 
 
 def test() -> None:
