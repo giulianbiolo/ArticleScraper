@@ -1,9 +1,9 @@
 '''Questo è il modulo che gestisce lo scraping di Ansa.it.'''
-from requests import get as reqget
 import threading
+from requests import get as reqget
+from bs4 import BeautifulSoup
 from modules.Article import Article
 from modules.WebScraper import WebScraper
-from bs4 import BeautifulSoup
 
 
 pages: list[str] = [
@@ -66,18 +66,3 @@ class Ansa(WebScraper):
         self.articles_history.append(
             Article(title, description, content, author, date, link))
         return self.articles_history[-1]
-
-
-def test() -> None:
-    '''Questo è il metodo di test.'''
-    ansa: Ansa = Ansa()
-    parsed_feeds = ansa.feeds
-    print("Articoli Di Giornale: " + str(len(parsed_feeds)))
-    articolo: Article = ansa.load_article(parsed_feeds[0][0])
-    print(articolo)  # Stampa solo il titolo così
-    articolo.print()  # Stampa tutto l'articolo
-    return
-
-
-if __name__ == '__main__':
-    test()

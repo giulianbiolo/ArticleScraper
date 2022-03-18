@@ -1,7 +1,7 @@
 '''Questo modulo implementa una superclasse per tutti i moduli di scraping.'''
+from feedparser import parse as feedparse
 from modules.Article import Article
 from modules.Feed import Feed
-from feedparser import parse
 
 
 class WebScraper:
@@ -21,7 +21,7 @@ class WebScraper:
 
     def _parse_page(self, page: str, lang: str = "it") -> None:
         '''Questo metodo ritorna i link parsati.'''
-        feed = parse(page)
+        feed = feedparse(page)
         for entry in feed['entries']:
             self.feeds.append(Feed(entry['link'], entry['title'], lang))
 

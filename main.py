@@ -1,9 +1,9 @@
 '''Questo è il file principale del progetto. ArticleScraper raccoglie tutti gli articoli di giornale pubblicati nel mondo, e li salva in un database.'''
 from threading import Thread
+from modules.Feed import Feed
 from modules.Ansa import Ansa
 from modules.WallStreetJournal import WSJ
-from modules.Feed import Feed
-#from gui import GUI
+from gui import GUI
 
 
 def main() -> None:
@@ -21,8 +21,8 @@ def main() -> None:
     all_feeds: list[Feed] = []
     all_feeds.extend(ansa.fetch_all())
     all_feeds.extend(wsj.fetch_all())
-    #gui: GUI = GUI(all_feeds)
-    # gui.run()
+    gui: GUI = GUI(all_feeds)
+    gui.run()
     return
 
 

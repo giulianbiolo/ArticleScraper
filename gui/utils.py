@@ -1,8 +1,8 @@
 '''Questo modulo gestisce alcuni funzioni di utilità.'''
+from NLP import prettify_text
 from modules.Article import Article
 from modules.Ansa import is_ansa_article
 from modules.WallStreetJournal import is_wsj_article
-from NLP import prettify_text
 
 
 def load_article_file(filename: str) -> tuple[str, str, str]:

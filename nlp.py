@@ -1,6 +1,6 @@
 import re
-from modules.Feed import Feed
 import Levenshtein
+from modules.Feed import Feed
 
 
 def get_affine_feeds(query_title: str, feeds: list[Feed]) -> list[Feed]:
