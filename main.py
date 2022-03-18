@@ -34,7 +34,7 @@ def main() -> None:
 
     all_feeds: list[Feed] = []
     all_feeds.extend(ansa.find_all())
-    #all_feeds.extend(wsj.find_all())
+    all_feeds.extend(wsj.find_all())
     gui: GUI = GUI(all_feeds)
     gui.run()
     return

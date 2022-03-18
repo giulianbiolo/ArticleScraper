@@ -1,3 +1,4 @@
+import re
 from modules.Feed import Feed
 import Levenshtein
 
@@ -23,9 +24,12 @@ def calc_highest_token_score(query_title: str, feed_title: str) -> float:
 
 def prettify_text(text: str) -> str:
     '''Questo metodo ritorna una stringa formattata per la visualizzazione.'''
-    text = text.replace("\n", " ")
-    text = text.replace("\r", " ")
-    text = text.replace("\t", " ")
-    text = text.replace("  ", " ")
+    # remove special escapes \n, \t, \r
+    text = re.sub(r"\\[tr]", " ", text)
+    # replace all multiple spaces with single space
+    text = re.sub(r"\s{2,}", " ", text)
     text = text.strip()
+    # We want to remove all special characters
+    whitelist_characters: list[str] = [' ', '.', ',', '!', '?', ':', ';', '-', '_', '+', '=', '*', '%', '$', '#', '@', '&', '^', '/', '<', '>', '|', '{', '}', '[', ']', '(', ')']
+    text = "".join(char for char in text if char.isalnum() or char in whitelist_characters)
     return text

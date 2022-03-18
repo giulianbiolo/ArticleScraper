@@ -17,7 +17,7 @@ pages: list[str] = [
 ]
 
 
-def is_wsj_article(self, link: str) -> bool:
+def is_wsj_article(link: str) -> bool:
     '''Questo metodo ritorna True se l'articolo è di wsj.com.'''
     return link.find('wsj.com') != -1
 
@@ -49,9 +49,9 @@ class WSJ:
         article: str = requests.get(link.strip(), headers={
                                     'User-Agent': 'Custom'})
         soup: BeautifulSoup = BeautifulSoup(article.text, 'html.parser')
-        title: str = soup.find(
-            'h1', {'class': 'wsj-article-headline'}).text.strip()
-        description: str = soup.find('h2', {'class': 'sub-head'}).text.strip()
+        title: str = soup.find('h1', {'itemprop': 'headline'}).text.strip()
+        description: str = soup.find(
+            'h2', {'itemprop': 'description'}).text.strip()
         content: str = soup.find(
             'div', {'class': 'wsj-snippet-body'}).text.strip()
         author: str = soup.find('a', {'class': 'author-name'}).text.strip()
@@ -83,7 +83,7 @@ def test() -> None:
     wsj: WSJ = WSJ()
     parsed_feeds = wsj.feeds
     print("Articoli Di Giornale: " + str(len(parsed_feeds)))
-    articolo: Article = wsj.load_article(parsed_feeds[0][0])
+    articolo: Article = wsj.load_article(parsed_feeds[5].link)
     print(articolo)  # Stampa solo il titolo così
     articolo.print()  # Stampa tutto l'articolo
     return
