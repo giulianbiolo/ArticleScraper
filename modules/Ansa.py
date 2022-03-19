@@ -1,5 +1,4 @@
 '''Questo è il modulo che gestisce lo scraping di Ansa.it.'''
-import threading
 from requests import get as reqget
 from bs4 import BeautifulSoup
 from modules.Article import Article
@@ -27,8 +26,25 @@ def is_ansa_article(link: str) -> bool:
     return link.find('ansa.it') != -1
 
 
+def load_article(link: str) -> Article:
+    '''Questo metodo ritorna il contenuto dell'articolo.'''
+    article = reqget(link.strip(), headers={'User-Agent': 'Custom'})
+    soup = BeautifulSoup(article.text, 'html.parser')
+    title: str = soup.find('h1', {'class': 'news-title'}).text.strip()
+    description: str = soup.find('h2', {'class': 'news-stit'}).text.strip()
+    content: str = soup.find('div', {'class': 'news-txt'}).text.strip()
+    author: str = soup.find('span', {'class': 'news-author'}).text.strip()
+    unparsed_date: str = soup.find('time').text.strip()
+    date: str = (unparsed_date[:-6] + " " + unparsed_date[-6:]).strip()
+    return Article(title, description, content, author, date, link)
+
+
 class Ansa(WebScraper):
     '''Questa classe implementa il webscraper di Ansa.it.'''
+
+    def __init__(self, *args, **kwargs):
+        '''Questo metodo inizializza l'oggetto.'''
+        super().__init__(*args, **kwargs)
 
     def __str__(self) -> str:
         '''Questo metodo ritorna una stringa che rappresenta l'oggetto.'''
@@ -38,31 +54,6 @@ class Ansa(WebScraper):
         '''Questo metodo ritorna una stringa che rappresenta l'oggetto.'''
         return str('<Ansa_object>')
 
-    def _load_feeds(self) -> None:
+    def _load_feeds(self, mutex) -> None:
         '''Questo metodo carica i feeds.'''
-        threads = []
-        for page in pages:
-            threads.append(threading.Thread(
-                target=self._parse_page, args=(page,)))
-        for thread in threads:
-            thread.start()
-        for thread in threads:
-            thread.join()
-
-    def _parse_page(self, page) -> None:
-        '''Questo metodo ritorna i link parsati.'''
-        super()._parse_page(page, "it")
-
-    def load_article(self, link: str) -> Article:
-        '''Questo metodo ritorna il contenuto dell'articolo.'''
-        article = reqget(link.strip(), headers={'User-Agent': 'Custom'})
-        soup = BeautifulSoup(article.text, 'html.parser')
-        title: str = soup.find('h1', {'class': 'news-title'}).text.strip()
-        description: str = soup.find('h2', {'class': 'news-stit'}).text.strip()
-        content: str = soup.find('div', {'class': 'news-txt'}).text.strip()
-        author: str = soup.find('span', {'class': 'news-author'}).text.strip()
-        unparsed_date: str = soup.find('time').text.strip()
-        date: str = (unparsed_date[:-6] + " " + unparsed_date[-6:]).strip()
-        self.articles_history.append(
-            Article(title, description, content, author, date, link))
-        return self.articles_history[-1]
+        super()._load_feeds(mutex, pages, "it")
