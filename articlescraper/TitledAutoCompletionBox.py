@@ -1,7 +1,7 @@
 '''Questo modulo implementa la classe della finestra di autocompletamento.'''
 import npyscreen
-from app.scrapers.base.Feed import Feed
-from app.NLP import get_affine_feeds
+from articlescraper.scrapers.base.Feed import Feed
+from articlescraper.NLP import get_affine_feeds
 
 
 class AutoCompletionBox(npyscreen.Autocomplete):

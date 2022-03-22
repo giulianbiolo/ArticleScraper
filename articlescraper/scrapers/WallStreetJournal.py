@@ -1,8 +1,8 @@
 '''Questo è il modulo che gestisce lo scraping di wsj.com.'''
 from requests import get as reqget
 from bs4 import BeautifulSoup
-from app.scrapers.base.Article import Article
-from app.scrapers.base.WebScraper import WebScraper
+from articlescraper.scrapers.base import Article
+from articlescraper.scrapers.base import WebScraper
 
 
 pages: list[str] = [

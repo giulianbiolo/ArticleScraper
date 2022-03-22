@@ -3,7 +3,8 @@ Questo è il file principale del progetto.
 ArticleScraper raccoglie articoli di giornale da tutto il mondo
 e ti permette di visualizzarli comodamente dal tuo terminale.
 '''
-from app import GUI
+#from app import GUI
+from articlescraper import GUI
 
 
 def main() -> None:
