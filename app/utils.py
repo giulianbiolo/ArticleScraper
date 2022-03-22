@@ -1,8 +1,8 @@
 '''Questo modulo gestisce alcuni funzioni di utilità.'''
-from NLP import prettify_text
-from modules.Article import Article
-from modules.Ansa import is_ansa_article
-from modules.WallStreetJournal import is_wsj_article
+from app.NLP import prettify_text
+from app.scrapers.base.Article import Article
+from app.scrapers.Ansa import is_ansa_article
+from app.scrapers.WallStreetJournal import is_wsj_article
 
 
 def load_article_file(filename: str) -> tuple[str, str, str]:
@@ -25,10 +25,10 @@ def load_article(link: str) -> tuple[str, str, str]:
     body: str = ""
     article: Article = None
     if is_ansa_article(link):
-        from modules.Ansa import load_article as ansa_load_article
+        from app.scrapers.Ansa import load_article as ansa_load_article
         article = ansa_load_article(link)
     elif is_wsj_article(link):
-        from modules.WallStreetJournal import load_article as wsj_load_article
+        from app.scrapers.WallStreetJournal import load_article as wsj_load_article
         article = wsj_load_article(link)
     if article is not None:
         title = article.title

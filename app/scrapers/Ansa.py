@@ -1,8 +1,8 @@
 '''Questo è il modulo che gestisce lo scraping di Ansa.it.'''
 from requests import get as reqget
 from bs4 import BeautifulSoup
-from modules.Article import Article
-from modules.WebScraper import WebScraper
+from app.scrapers.base.Article import Article
+from app.scrapers.base.WebScraper import WebScraper
 
 
 pages: list[str] = [

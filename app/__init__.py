@@ -3,12 +3,12 @@ from time import sleep as wait
 from threading import Thread, Lock
 from weakref import CallableProxyType
 import npyscreen
-from modules.Feed import Feed
-from modules.Ansa import Ansa
-from modules.WallStreetJournal import WSJ
-from gui.BrowserBox import BrowserBox
-from gui.ArticleBox import ArticleBox
-from gui.LoadingForm import LoadingForm
+from app.scrapers.base.Feed import Feed
+from app.scrapers.Ansa import Ansa
+from app.scrapers.WallStreetJournal import WSJ
+from app.BrowserBox import BrowserBox
+from app.ArticleBox import ArticleBox
+from app.LoadingForm import LoadingForm
 
 
 npyscreen.NPSAppManaged.STARTING_FORM = "LOADING"

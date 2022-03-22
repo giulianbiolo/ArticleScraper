@@ -1,8 +1,8 @@
 '''Questo modulo implementa una superclasse per tutti i moduli di scraping.'''
 from threading import Thread, Lock
 from feedparser import parse as feedparse
-from modules.Article import Article
-from modules.Feed import Feed
+from app.scrapers.base.Article import Article
+from app.scrapers.base.Feed import Feed
 
 
 class WebScraper:

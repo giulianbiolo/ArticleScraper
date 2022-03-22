@@ -1,8 +1,8 @@
 '''Questo modulo implementa la classe della finestra di ricerca.'''
 import npyscreen
-from modules.Feed import Feed
-from gui.utils import load_article
-from gui.TitledAutoCompletionBox import TitledAutoCompletionBox
+from app.scrapers.base.Feed import Feed
+from app.utils import load_article
+from app.TitledAutoCompletionBox import TitledAutoCompletionBox
 
 
 class BrowserBox(npyscreen.ActionForm):

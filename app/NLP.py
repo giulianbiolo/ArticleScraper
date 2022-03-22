@@ -1,7 +1,7 @@
 '''Questo file gestisce la logica di ricerca di articoli.'''
 from re import sub as re_sub
 from Levenshtein import ratio as Levenshtein_ratio
-from modules.Feed import Feed
+from app.scrapers.base.Feed import Feed
 
 
 def get_affine_feeds(query_title: str, feeds: list[Feed]) -> list[Feed]:
