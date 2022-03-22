@@ -8,7 +8,7 @@ class LoadingForm(npyscreen.ActionForm):
     '''Questa classe gestisce il form di caricamento della GUI.'''
 
     def create(self):
-        '''Questo è il metodo di definizione e creazione degli elementi grafici della pagina Loading.'''
+        '''Questo è il metodo di definizione/creazione di elementi grafici della pagina Loading.'''
         self.loading_text = self.add(
             npyscreen.TitleText, name="Loading...", w_id="loading")
         self.loading_text.set_relyx(

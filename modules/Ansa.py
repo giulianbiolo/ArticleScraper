@@ -42,10 +42,6 @@ def load_article(link: str) -> Article:
 class Ansa(WebScraper):
     '''Questa classe implementa il webscraper di Ansa.it.'''
 
-    def __init__(self, *args, **kwargs):
-        '''Questo metodo inizializza l'oggetto.'''
-        super().__init__(*args, **kwargs)
-
     def __str__(self) -> str:
         '''Questo metodo ritorna una stringa che rappresenta l'oggetto.'''
         return str('<Ansa_object>')
@@ -54,6 +50,6 @@ class Ansa(WebScraper):
         '''Questo metodo ritorna una stringa che rappresenta l'oggetto.'''
         return str('<Ansa_object>')
 
-    def _load_feeds(self, mutex) -> None:
+    def load_feeds(self, mutex) -> None:
         '''Questo metodo carica i feeds.'''
-        super()._load_feeds(mutex, pages, "it")
+        super().load_feeds(mutex, pages, "it")

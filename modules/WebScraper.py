@@ -30,7 +30,7 @@ class WebScraper:
         for entry in feed['entries']:
             self.feeds.append(Feed(entry['link'], entry['title'], lang))
 
-    def _load_feeds(self, mutex, pages: list[str], lang: str = "en") -> None:
+    def load_feeds(self, mutex, pages: list[str], lang: str = "en") -> None:
         '''Questo metodo carica i feeds.'''
         threads = []
         for page in pages:

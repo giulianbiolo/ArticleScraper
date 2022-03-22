@@ -6,7 +6,7 @@ class ArticleBox(npyscreen.ActionForm):
     '''Questa classe gestisce il form di visualizzazione articoli.'''
 
     def create(self):
-        '''Questo è il metodo di definizione e creazione degli elementi grafici della pagina Article.'''
+        '''Questo è il metodo di definizione/creazione di elementi grafici della pagina Article.'''
         self.title_box = self.add(
             npyscreen.TitleFixedText, name="Title:", w_id="title")
         self.description_box = self.add(

@@ -1,10 +1,11 @@
+'''Questo file gestisce la logica di ricerca di articoli.'''
 from re import sub as re_sub
 from Levenshtein import ratio as Levenshtein_ratio
 from modules.Feed import Feed
 
 
 def get_affine_feeds(query_title: str, feeds: list[Feed]) -> list[Feed]:
-    '''Questo metodo ritorna i feed attinenti al testo ricercato, osservando la vicinanza al titolo.'''
+    '''Questo metodo ritorna i feed attinenti osservando la vicinanza al titolo.'''
     query_title = prettify_text(query_title.lower())
     feeds.sort(key=lambda feed: calc_highest_token_score(
         query_title, prettify_text(feed.title.lower())), reverse=True)
@@ -31,6 +32,9 @@ def prettify_text(text: str) -> str:
     text = re_sub(r"\s{2,}", " ", text)
     text = text.strip()
     # We want to remove all special characters
-    whitelist_characters: list[str] = [' ', '.', ',', '!', '?', ':', ';', '-', '_', '+', '=',
-                                       '*', '%', '$', '#', '@', '&', '^', '/', '<', '>', '|', '{', '}', '[', ']', '(', ')']
+    whitelist_characters: list[str] = [
+        ' ', '.', ',', "'", '!', '?', ':', ';', '-', '_', '+', '=',
+        '*', '%', '$', '#', '@', '&', '^', '/', '<', '>', '|', '{',
+        '}', '[', ']', '(', ')'
+    ]
     return "".join(char for char in text if char.isalnum() or char in whitelist_characters)

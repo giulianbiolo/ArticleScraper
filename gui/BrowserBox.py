@@ -9,7 +9,7 @@ class BrowserBox(npyscreen.ActionForm):
     '''Questa classe gestisce il form di ricerca degli articoli.'''
 
     def create(self):
-        '''Questo è il metodo di definizione e creazione degli elementi grafici della pagina Browser.'''
+        '''Questo è il metodo di definizione/creazione di elementi grafici della pagina Browser.'''
         self.browsing_box = self.add(
             TitledAutoCompletionBox, name="Filename: ", w_id="filename")
         self.browsing_btn = self.add(

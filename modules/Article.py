@@ -2,6 +2,8 @@
 
 
 class Article:
+    '''Questa classe rappresenta un articolo.'''
+
     def __init__(self, title="", description="", content="", author="", date="", link="") -> None:
         '''Questo è il costruttore della classe.'''
         self.title: str = title

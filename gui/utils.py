@@ -1,5 +1,4 @@
 '''Questo modulo gestisce alcuni funzioni di utilità.'''
-from threading import Lock
 from NLP import prettify_text
 from modules.Article import Article
 from modules.Ansa import is_ansa_article
@@ -25,7 +24,6 @@ def load_article(link: str) -> tuple[str, str, str]:
     description: str = ""
     body: str = ""
     article: Article = None
-    mutex: Lock = Lock()
     if is_ansa_article(link):
         from modules.Ansa import load_article as ansa_load_article
         article = ansa_load_article(link)
