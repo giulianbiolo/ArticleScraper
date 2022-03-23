@@ -70,6 +70,8 @@ elif is_<your-module>_article(link):
     import load_article as <your-module>_load_article
     article = <your-module>_load_article(link)
 ```
+If you want the scraper-selection feature to work you have to add your scraper name inside the `modules` list in the `WebsiteAutoCompletionBox.py` file.
+
 
 After doing all of this you should be able to run the app and read your new scraped articles.  
 At this point, if everything works fine, you can open a pull request to add your module to the repository.  
