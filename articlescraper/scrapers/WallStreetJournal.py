@@ -48,4 +48,4 @@ class WSJ(WebScraper):
 
     def load_feeds(self, mutex) -> None:
         '''This method loads the feeds from all of WallStreetJournal, using the default links.'''
-        super().load_feeds(mutex, pages, "en")
+        super().load_feeds(mutex, pages, "en", "WallStreetJournal")

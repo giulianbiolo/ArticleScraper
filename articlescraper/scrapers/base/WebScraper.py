@@ -24,18 +24,18 @@ class WebScraper:
         '''This method returns a string that represents the object.'''
         return str('<WebScraper_Object>')
 
-    def _parse_page(self, page: str, lang: str = "en") -> None:
+    def _parse_page(self, page: str, lang: str = "en", scraper_name: str = "unknown") -> None:
         '''This method parses a single page.'''
         feed = feedparse(page)
         for entry in feed['entries']:
-            self.feeds.append(Feed(entry['link'], entry['title'], lang))
+            self.feeds.append(Feed(entry['link'], entry['title'], lang, scraper_name))
 
-    def load_feeds(self, mutex, pages: list[str], lang: str = "en") -> None:
+    def load_feeds(self, mutex, pages: list[str], lang: str = "en", scraper_name: str = "unknown") -> None:
         '''This method loads the feeds from the given pages.'''
         threads = []
         for page in pages:
             threads.append(Thread(
-                target=self._parse_page, args=(page, lang)))
+                target=self._parse_page, args=(page, lang, scraper_name)))
         for thread in threads:
             thread.start()
         for thread in threads:

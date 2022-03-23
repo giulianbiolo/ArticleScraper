@@ -5,7 +5,8 @@ which takes care of the graphical visualization of the search box.
 import npyscreen
 from articlescraper.scrapers.base import Feed
 from articlescraper.utils import load_article
-from articlescraper.TitledAutoCompletionBox import TitledAutoCompletionBox
+from articlescraper.SearchAutoCompletionBox import SearchAutoCompletionBox
+from articlescraper.WebsiteAutoCompletionBox import WebsiteAutoCompletionBox
 
 
 class BrowserBox(npyscreen.ActionForm):
@@ -13,14 +14,18 @@ class BrowserBox(npyscreen.ActionForm):
 
     def create(self):
         '''This method defines the basic graphical elements of the page.'''
+        self.website_box = self.add(
+            WebsiteAutoCompletionBox, name="Website: ", w_id="website")
         self.browsing_box = self.add(
-            TitledAutoCompletionBox, name="Filename: ", w_id="filename")
+            SearchAutoCompletionBox, name="Filename: ", w_id="filename")
         self.browsing_btn = self.add(
             npyscreen.ButtonPress, name="Browse", w_id="browse")
-        self.browsing_box.set_relyx(
+        self.website_box.set_relyx(
             self.browsing_box.rely + 1, self.browsing_box.relx + 4)
+        self.browsing_box.set_relyx(
+            self.browsing_box.rely + 3, self.browsing_box.relx + 4)
         self.browsing_btn.set_relyx(
-            self.browsing_btn.rely + 2, self.browsing_btn.relx + 4)
+            self.browsing_btn.rely + 4, self.browsing_btn.relx + 2)
         self.browsing_btn.whenPressed = self.on_ok
         self.add_handlers({
             "^X": self.on_quit,

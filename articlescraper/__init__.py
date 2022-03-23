@@ -6,6 +6,7 @@ from articlescraper.utils import load_article_file, load_article
 from articlescraper.ArticleBox import ArticleBox
 from articlescraper.BrowserBox import BrowserBox
 from articlescraper.LoadingForm import LoadingForm
-from articlescraper.TitledAutoCompletionBox import TitledAutoCompletionBox
+from articlescraper.SearchAutoCompletionBox import SearchAutoCompletionBox
+from articlescraper.WebsiteAutoCompletionBox import WebsiteAutoCompletionBox
 
 from articlescraper.gui import GUI

@@ -1,6 +1,6 @@
 '''
-This module implements the class TitledAutoCompletionBox,
-which takes care of the graphical visualization of the autocompletion box.
+This module implements the class SearchAutoCompletionBox,
+which takes care of the visualization of the search autocompletion box.
 '''
 import npyscreen
 from articlescraper.scrapers.base.Feed import Feed
@@ -8,12 +8,15 @@ from articlescraper.NLP import get_affine_feeds
 
 
 class AutoCompletionBox(npyscreen.Autocomplete):
-    '''This class implements the autocompletion box.'''
+    '''This class implements an autocompletion box.'''
 
     def auto_complete(self, _):
         '''This method handles the autocompletion of articles functionality.'''
         feeds_list: list[str] = []
         feeds: list[Feed] = self.find_parent_app().feeds
+        scraper: str = self.find_parent_app().browser.website_box.value
+        if scraper.strip().lower() != "all" and scraper.strip().lower() != "":
+            feeds = [feed for feed in feeds if scraper.strip().lower() in feed.scraper.strip().lower()]
         search: str = self.value.strip()
         if search != "":
             entire_feeds_list = get_affine_feeds(search, feeds)
@@ -32,6 +35,6 @@ class AutoCompletionBox(npyscreen.Autocomplete):
         self.cursor_position = len(self.value)
 
 
-class TitledAutoCompletionBox(npyscreen.TitleFilename):
+class SearchAutoCompletionBox(npyscreen.TitleFilename):
     '''This is a wrapper class for the personalized autocompletion box.'''
     _entry_type = AutoCompletionBox

@@ -52,4 +52,4 @@ class Ansa(WebScraper):
 
     def load_feeds(self, mutex) -> None:
         '''This method loads the feeds from all of Ansa, using the default links.'''
-        super().load_feeds(mutex, pages, "it")
+        super().load_feeds(mutex, pages, "it", "Ansa")
