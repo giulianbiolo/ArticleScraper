@@ -1,11 +1,11 @@
-'''Questo file gestisce la logica di ricerca di articoli.'''
+'''This module handles the search logic.'''
 from re import sub as re_sub
 from Levenshtein import ratio as Levenshtein_ratio
 from articlescraper.scrapers.base.Feed import Feed
 
 
 def get_affine_feeds(query_title: str, feeds: list[Feed]) -> list[Feed]:
-    '''Questo metodo ritorna i feed attinenti osservando la vicinanza al titolo.'''
+    '''This method returns the feeds that are affine to the query.'''
     query_title = prettify_text(query_title.lower())
     feeds.sort(key=lambda feed: calc_highest_token_score(
         query_title, prettify_text(feed.title.lower())), reverse=True)
@@ -13,7 +13,7 @@ def get_affine_feeds(query_title: str, feeds: list[Feed]) -> list[Feed]:
 
 
 def calc_highest_token_score(query_title: str, feed_title: str) -> float:
-    '''Questo metodo calcola il miglior score di affinità tra i token del titolo.'''
+    '''This method calculates the highest token score.'''
     tokens_query_title = query_title.split(" ")
     tokens_feed_title = feed_title.split(" ")
     token_score_overall: float = 0.0
@@ -25,7 +25,7 @@ def calc_highest_token_score(query_title: str, feed_title: str) -> float:
 
 
 def prettify_text(text: str) -> str:
-    '''Questo metodo ritorna una stringa formattata per la visualizzazione.'''
+    '''This method prettifies the text.'''
     # remove special escapes \n, \t, \r
     text = re_sub(r"\\[tr]", " ", text)
     # replace all multiple spaces with single space

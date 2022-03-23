@@ -1,14 +1,17 @@
-'''Questo modulo implementa la classe della finestra di autocompletamento.'''
+'''
+This module implements the class TitledAutoCompletionBox,
+which takes care of the graphical visualization of the autocompletion box.
+'''
 import npyscreen
 from articlescraper.scrapers.base.Feed import Feed
 from articlescraper.NLP import get_affine_feeds
 
 
 class AutoCompletionBox(npyscreen.Autocomplete):
-    '''Questa classe gestisce il funzionamento dell'autocompletamento degli articoli.'''
+    '''This class implements the autocompletion box.'''
 
     def auto_complete(self, _):
-        '''Questo è l'override del metodo che gestisce i feed degli autocompletamenti.'''
+        '''This method handles the autocompletion of articles functionality.'''
         feeds_list: list[str] = []
         feeds: list[Feed] = self.find_parent_app().feeds
         search: str = self.value.strip()
@@ -30,5 +33,5 @@ class AutoCompletionBox(npyscreen.Autocomplete):
 
 
 class TitledAutoCompletionBox(npyscreen.TitleFilename):
-    '''Questa è la classe wrapper con testo dell'autocompletamento personalizzato.'''
+    '''This is a wrapper class for the personalized autocompletion box.'''
     _entry_type = AutoCompletionBox

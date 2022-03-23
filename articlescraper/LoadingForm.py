@@ -1,14 +1,17 @@
-'''Questo modulo implementa la classe della finestra di caricamento.'''
+'''
+This module implements the class LoadingForm,
+which takes care of the graphical visualization of the loading page.
+'''
 from time import sleep
 from threading import Thread
 import npyscreen
 
 
 class LoadingForm(npyscreen.ActionForm):
-    '''Questa classe gestisce il form di caricamento della GUI.'''
+    '''This class implements the LoadingForm.'''
 
     def create(self):
-        '''Questo è il metodo di definizione/creazione di elementi grafici della pagina Loading.'''
+        '''This method defines the basic graphical elements of the page.'''
         self.loading_text = self.add(
             npyscreen.TitleText, name="Loading...", w_id="loading")
         self.loading_text.set_relyx(
@@ -21,7 +24,7 @@ class LoadingForm(npyscreen.ActionForm):
         self.listener.start()
 
     def listen(self):
-        '''Questo metodo continua a controllare se self.feeds viene popolato.'''
+        '''This method keeps on checking wheter self.feeds gets populated.'''
         feed_is_empty: bool = True
         while feed_is_empty:
             sleep(0.1)
@@ -33,5 +36,5 @@ class LoadingForm(npyscreen.ActionForm):
         self.display()
 
     def on_quit(self, _) -> None:
-        '''Questo metodo gestisce la chiusura dell'applicazione.'''
+        '''This method handles the quit functionality.'''
         self.parentApp.switchForm(None)

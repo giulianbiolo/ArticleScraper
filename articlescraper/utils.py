@@ -1,4 +1,4 @@
-'''Questo modulo gestisce alcuni funzioni di utilità.'''
+'''This module handles some utility functions.'''
 from articlescraper.NLP import prettify_text
 from articlescraper.scrapers.base.Article import Article
 from articlescraper.scrapers.Ansa import is_ansa_article
@@ -6,7 +6,7 @@ from articlescraper.scrapers.WallStreetJournal import is_wsj_article
 
 
 def load_article_file(filename: str) -> tuple[str, str, str]:
-    '''Questo metodo carica un articolo da un file.'''
+    '''This method loads the article given a filename.'''
     title: str = ""
     description: str = ""
     body: str = ""
@@ -19,7 +19,7 @@ def load_article_file(filename: str) -> tuple[str, str, str]:
 
 
 def load_article(link: str) -> tuple[str, str, str]:
-    '''Questo metodo carica un articolo dal link.'''
+    '''This method loads the article given the link.'''
     title: str = ""
     description: str = ""
     body: str = ""

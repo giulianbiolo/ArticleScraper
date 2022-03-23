@@ -1,14 +1,14 @@
 '''
-Questo è il file principale del progetto.
-ArticleScraper raccoglie articoli di giornale da tutto il mondo
-e ti permette di visualizzarli comodamente dal tuo terminale.
+This is the main file of the program.  
+ArticleScraper gathers newspapers and articles from the web 
+and lets you read them from the command line.
 '''
-#from app import GUI
+
 from articlescraper import GUI
 
 
 def main() -> None:
-    '''Questo è il main del programma. Qui gestisco la logica di più alto livello.'''
+    '''This is the main function of the program. Here the GUI is initialized.'''
     gui: GUI = GUI()
     gui.run()
 

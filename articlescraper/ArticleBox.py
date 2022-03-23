@@ -1,12 +1,16 @@
-'''Questo modulo implementa la classe della finestra di visualizzazione dell'articolo.'''
+'''
+This module implements the class ArticleBox,
+which takes care of the graphical visualization of the articles.
+'''
+
 import npyscreen
 
 
 class ArticleBox(npyscreen.ActionForm):
-    '''Questa classe gestisce il form di visualizzazione articoli.'''
+    '''This class implements the ArticleBox.'''
 
     def create(self):
-        '''Questo è il metodo di definizione/creazione di elementi grafici della pagina Article.'''
+        '''This method defines the basic graphical elements of the page.'''
         self.title_box = self.add(
             npyscreen.TitleFixedText, name="Title:", w_id="title")
         self.description_box = self.add(
@@ -27,14 +31,14 @@ class ArticleBox(npyscreen.ActionForm):
         })
 
     def on_ok(self):
-        '''Questo metodo gestisce la funzionalità del tasto OK.'''
+        '''This method handles the OK button.'''
         self.on_back(None)
 
     def on_back(self, _):
-        '''Questo metodo riporta al browser file.'''
+        '''This method handles the "go back" functionality.'''
         self.parentApp.getForm("BROWSER").browsing_box.value = ""
         self.parentApp.switchForm("BROWSER")
 
     def on_quit(self, _):
-        '''Questo metodo gestisce la chiusura dell'applicazione.'''
+        '''This method handles the quit functionality.'''
         self.parentApp.switchForm(None)

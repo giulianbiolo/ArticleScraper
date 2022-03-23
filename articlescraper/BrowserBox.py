@@ -1,4 +1,7 @@
-'''Questo modulo implementa la classe della finestra di ricerca.'''
+'''
+This module implements the class BrowserBox,
+which takes care of the graphical visualization of the search box.
+'''
 import npyscreen
 from articlescraper.scrapers.base import Feed
 from articlescraper.utils import load_article
@@ -6,10 +9,10 @@ from articlescraper.TitledAutoCompletionBox import TitledAutoCompletionBox
 
 
 class BrowserBox(npyscreen.ActionForm):
-    '''Questa classe gestisce il form di ricerca degli articoli.'''
+    '''This class implements the BrowserBox.'''
 
     def create(self):
-        '''Questo è il metodo di definizione/creazione di elementi grafici della pagina Browser.'''
+        '''This method defines the basic graphical elements of the page.'''
         self.browsing_box = self.add(
             TitledAutoCompletionBox, name="Filename: ", w_id="filename")
         self.browsing_btn = self.add(
@@ -24,7 +27,7 @@ class BrowserBox(npyscreen.ActionForm):
         })
 
     def on_ok(self):
-        '''Questo metodo viene chiamato quando viene premuto il pulsante OK / Browse.'''
+        '''This method handles the OK button.'''
         article_title: str = self.browsing_box.value
         try:
             feed: Feed = [feed for feed in self.find_parent_app().feeds if feed.title == article_title][0]
@@ -44,5 +47,5 @@ class BrowserBox(npyscreen.ActionForm):
         self.parentApp.switchForm("ARTICLE")
 
     def on_quit(self, _):
-        '''Questo metodo gestisce la chiusura dell'applicazione.'''
+        '''This method handles the quit functionality.'''
         self.parentApp.switchForm(None)

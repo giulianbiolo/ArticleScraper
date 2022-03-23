@@ -1,4 +1,4 @@
-'''Questo è il modulo che gestisce lo scraping di Ansa.it.'''
+'''This module takes care of scraping the Ansa website.'''
 from requests import get as reqget
 from bs4 import BeautifulSoup
 from articlescraper.scrapers.base import Article
@@ -22,12 +22,12 @@ pages: list[str] = [
 
 
 def is_ansa_article(link: str) -> bool:
-    '''Questo metodo ritorna True se l'articolo è di Ansa.'''
+    '''This method returns True if the given link is an Ansa article.'''
     return link.find('ansa.it') != -1
 
 
 def load_article(link: str) -> Article:
-    '''Questo metodo ritorna il contenuto dell'articolo.'''
+    '''This method loads the article content given the link.'''
     article = reqget(link.strip(), headers={'User-Agent': 'Custom'})
     soup = BeautifulSoup(article.text, 'html.parser')
     title: str = soup.find('h1', {'class': 'news-title'}).text.strip()
@@ -40,16 +40,16 @@ def load_article(link: str) -> Article:
 
 
 class Ansa(WebScraper):
-    '''Questa classe implementa il webscraper di Ansa.it.'''
+    '''This class represents the Ansa scraper.'''
 
     def __str__(self) -> str:
-        '''Questo metodo ritorna una stringa che rappresenta l'oggetto.'''
+        '''This method returns a string that represents the object.'''
         return str('<Ansa_object>')
 
     def __repr__(self) -> str:
-        '''Questo metodo ritorna una stringa che rappresenta l'oggetto.'''
+        '''This method returns a string that represents the object.'''
         return str('<Ansa_object>')
 
     def load_feeds(self, mutex) -> None:
-        '''Questo metodo carica i feeds.'''
+        '''This method loads the feeds from all of Ansa, using the default links.'''
         super().load_feeds(mutex, pages, "it")

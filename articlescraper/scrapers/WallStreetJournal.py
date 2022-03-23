@@ -1,4 +1,4 @@
-'''Questo è il modulo che gestisce lo scraping di wsj.com.'''
+'''This module takes care of scraping the WallStreetJournal website.'''
 from requests import get as reqget
 from bs4 import BeautifulSoup
 from articlescraper.scrapers.base import Article
@@ -16,12 +16,12 @@ pages: list[str] = [
 
 
 def is_wsj_article(link: str) -> bool:
-    '''Questo metodo ritorna True se l'articolo è di wsj.com.'''
+    '''This method returns True if the given link is a WSJ article.'''
     return link.find('wsj.com') != -1
 
 
 def load_article(link: str) -> Article:
-    '''Questo metodo ritorna il contenuto dell'articolo.'''
+    '''This method loads the article content given the link.'''
     article: str = reqget(link.strip(), headers={
         'User-Agent': 'Custom'})
     soup: BeautifulSoup = BeautifulSoup(article.text, 'html.parser')
@@ -36,16 +36,16 @@ def load_article(link: str) -> Article:
 
 
 class WSJ(WebScraper):
-    '''Questa classe implementa il webscraper di wsj.com.'''
+    '''This class represents the WallStreetJournal scraper.'''
 
     def __str__(self) -> str:
-        '''Questo metodo ritorna una stringa che rappresenta l'oggetto.'''
+        '''This method returns a string that represents the object.'''
         return str('<WSJ_object>')
 
     def __repr__(self) -> str:
-        '''Questo metodo ritorna una stringa che rappresenta l'oggetto.'''
+        '''This method returns a string that represents the object.'''
         return str('<WSJ_object>')
 
     def load_feeds(self, mutex) -> None:
-        '''Questo metodo carica i feeds.'''
+        '''This method loads the feeds from all of WallStreetJournal, using the default links.'''
         super().load_feeds(mutex, pages, "en")

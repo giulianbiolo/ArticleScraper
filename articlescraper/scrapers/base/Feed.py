@@ -1,11 +1,11 @@
-'''Questo modulo implementa la classe Feed.'''
+'''This method implements the Feed class.'''
 
 
 class Feed:
-    '''Questa è la classe che rappresenta il singolo feed rss.'''
+    '''This class represents a single RSS Feed.'''
 
     def __init__(self, link: str = "", title: str = "", lang: str = "it") -> None:
-        '''Questo è il costruttore della classe.'''
+        '''This is the constructor of the class.'''
         if link == "" or title == "":
             raise ValueError("Il feed deve avere sia un link che un titolo!")
         self.link: str = link
@@ -13,13 +13,13 @@ class Feed:
         self.lang: str = lang
 
     def __str__(self) -> str:
-        '''Questo metodo ritorna una stringa che rappresenta l'oggetto.'''
+        '''This method returns a string that represents the object.'''
         return str(self.title)
 
     def __repr__(self) -> str:
-        '''Questo metodo ritorna una stringa che rappresenta l'oggetto.'''
+        '''This method returns a string that represents the object.'''
         return str(self.title)
 
     def __eq__(self, other) -> bool:
-        '''Questo metodo ritorna True se due oggetti sono uguali.'''
+        '''This method returns True if the objects are equal.'''
         return self.title == other.title

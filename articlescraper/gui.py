@@ -1,4 +1,7 @@
-'''Questo è il modulo principale di gestione dell'interfaccia grafica all'interno del progetto.'''
+'''
+This is the main GUI module of the program.
+It takes care of the graphical interface of the program.
+'''
 from time import sleep as wait
 from threading import Thread, Lock
 from weakref import CallableProxyType
@@ -15,10 +18,13 @@ npyscreen.NPSAppManaged.STARTING_FORM = "LOADING"
 
 
 class GUI(npyscreen.NPSAppManaged):
-    '''Questa classe permette di gestire la GUI.'''
+    '''This class implements the GUI of the program.'''
 
     def __init__(self, *args, **kwargs):
-        '''Questo metodo viene chiamato all'avvio dell'applicazione.'''
+        '''
+        This method gets called at the beginning of the program.
+        Here we define some of the most fundamental variables of the program.
+        '''
         super().__init__(*args, **kwargs)
         self.feeds: list[Feed] = None
         self.loading: CallableProxyType[LoadingForm] = None
@@ -27,7 +33,10 @@ class GUI(npyscreen.NPSAppManaged):
         self.mutex: Lock = Lock()
 
     def onStart(self):
-        '''Questo metodo viene chiamato all'avvio dell'applicazione.'''
+        '''
+        This method gets called at the beginning of the program.
+        Here we define the various pages of the GUI.
+        '''
         npyscreen.setTheme(npyscreen.Themes.ElegantTheme)
         self.loading = self.addForm("LOADING", LoadingForm, name="Loading...")
         self.browser = self.addForm(
@@ -38,8 +47,8 @@ class GUI(npyscreen.NPSAppManaged):
 
     def load_data(self) -> list[Feed]:
         '''
-        Questo metodo carica i dati forniti dai vari scraper.
-        Per aggiungere uno scraper bisogna solo instanziarlo nella lista 'modules'.
+        This method loads the data given by the various scrapers.
+        To add a new scraper, simply add it to the list 'modules' below.
         '''
         threads: list[Thread] = []
         # modules: list = [ ..., YourAwesomeScraper(self.mutex)]
