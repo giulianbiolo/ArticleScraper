@@ -28,7 +28,7 @@ class WebScraper:
     def _parse_page(self, page: str, lang: str = "en", scraper_name: str = "unknown") -> None:
         '''This method parses a single page.'''
         xmldoc: str = get(page).text
-        feed = parse(xmldoc.encode("utf-8"))
+        feed = parse(xmldoc.encode("utf-8"), clean_html=False)
         for entry in feed['entries']:
             self.feeds.append(Feed(entry['link'], entry['title'], lang, scraper_name))
 
