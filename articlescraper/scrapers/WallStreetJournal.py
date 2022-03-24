@@ -25,13 +25,54 @@ def load_article(link: str) -> Article:
     article: str = reqget(link.strip(), headers={
         'User-Agent': 'Custom'})
     soup: BeautifulSoup = BeautifulSoup(article.text, 'html.parser')
-    title: str = soup.find('h1', {'itemprop': 'headline'}).text.strip()
-    description: str = soup.find(
-        'h2', {'itemprop': 'description'}).text.strip()
-    content: str = soup.find(
-        'div', {'class': 'wsj-snippet-body'}).text.strip()
-    author: str = soup.find('a', {'class': 'author-name'}).text.strip()
-    date: str = soup.find('time').text.strip()
+    print(soup.prettify())
+    print("LINK: " + link)
+    title: str = ""
+    try:
+        title = soup.find('h1', {'itemprop': 'headline'}).text.strip()
+    except:
+        try:
+            title = soup.find('h1', {'class': 'wsj-article-headline'}).text.strip()
+        except:
+            pass
+    description: str = ""
+    try:
+        description = soup.find(
+            'h2', {'itemprop': 'description'}).text.strip()
+    except:
+        try:
+            description = soup.findAll('h2')[0].text.strip()
+        except:
+            pass
+    content: str = ""
+    try:
+        content = soup.find(
+            'div', {'class': 'wsj-snippet-body'}).text.strip()
+    except:
+        try:
+            content = soup.find(
+                'div', {'class': 'article-content'}).p.text().strip()
+        except:
+            try:
+                content = soup.find(
+                    'div', {'id': 'wsj-article-wrap'}).findAll('p')
+                for p in content:
+                    content += p.text.strip()
+            except:
+                pass
+    author: str = ""
+    try:
+        author = soup.find('a', {'class': 'author-name'}).text.strip()
+    except:
+        pass
+    date: str = ""
+    try:
+        date = soup.find('time').text.strip()
+    except:
+        pass
+    if content == "":
+        content = description
+        description = ""
     return Article(title, description, content, author, date, link)
 
 
