@@ -18,14 +18,6 @@ class WebScraper:
         self.articles_history: list[Article] = []
         self.session: Session = session
 
-    def __str__(self) -> str:
-        '''This method returns a string that represents the object.'''
-        return str('<WebScraper_Object>')
-
-    def __repr__(self) -> str:
-        '''This method returns a string that represents the object.'''
-        return str('<WebScraper_Object>')
-
     def _parse_page(self, page: str, lang: str = "en", scraper_name: str = "unknown") -> None:
         '''This method parses a single page.'''
         xmldoc: str = self.session.get(page).text

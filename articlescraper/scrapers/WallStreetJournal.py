@@ -79,14 +79,6 @@ def load_article(link: str) -> Article:
 class WSJ(WebScraper):
     '''This class represents the WallStreetJournal scraper.'''
 
-    def __str__(self) -> str:
-        '''This method returns a string that represents the object.'''
-        return str('<WSJ_object>')
-
-    def __repr__(self) -> str:
-        '''This method returns a string that represents the object.'''
-        return str('<WSJ_object>')
-
     def load_feeds(self, mutex) -> None:
         '''This method loads the feeds from all of WallStreetJournal, using the default links.'''
         super().load_feeds(mutex, pages, "en", "WallStreetJournal")

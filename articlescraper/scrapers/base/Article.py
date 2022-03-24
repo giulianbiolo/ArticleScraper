@@ -13,21 +13,9 @@ class Article:
         self.date: str = date
         self.author: str = author
 
-    def __str__(self) -> str:
-        '''This method returns a string that represents the object.'''
-        return str(self.title)
-
-    def __repr__(self) -> str:
-        '''This method returns a string that represents the object.'''
-        return str(self.title)
-
     def __eq__(self, other) -> bool:
         '''This method returns True if the objects are equal.'''
         return self.title == other.title
-
-    def __hash__(self) -> int:
-        '''This method returns the hash of the object.'''
-        return hash(self.title)
 
     def print(self) -> None:
         '''This method prints the object.'''

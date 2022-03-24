@@ -42,14 +42,6 @@ def load_article(link: str) -> Article:
 class Ansa(WebScraper):
     '''This class represents the Ansa scraper.'''
 
-    def __str__(self) -> str:
-        '''This method returns a string that represents the object.'''
-        return str('<Ansa_object>')
-
-    def __repr__(self) -> str:
-        '''This method returns a string that represents the object.'''
-        return str('<Ansa_object>')
-
     def load_feeds(self, mutex) -> None:
         '''This method loads the feeds from all of Ansa, using the default links.'''
         super().load_feeds(mutex, pages, "it", "Ansa")
