@@ -24,9 +24,9 @@ def load_article(link: str) -> Article:
     '''This method loads the article content given the link.'''
     article: str = reqget(link.strip(), headers={
         'User-Agent': 'Custom'})
-    soup: BeautifulSoup = BeautifulSoup(article.text, 'html.parser')
-    print(soup.prettify())
-    print("LINK: " + link)
+    soup: BeautifulSoup = BeautifulSoup(article.text, 'lxml')
+    # print(soup.prettify())
+    # print("LINK: " + link)
     title: str = ""
     try:
         title = soup.find('h1', {'itemprop': 'headline'}).text.strip()

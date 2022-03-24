@@ -29,7 +29,7 @@ def is_ansa_article(link: str) -> bool:
 def load_article(link: str) -> Article:
     '''This method loads the article content given the link.'''
     article = reqget(link.strip(), headers={'User-Agent': 'Custom'})
-    soup = BeautifulSoup(article.text, 'html.parser')
+    soup = BeautifulSoup(article.text, 'lxml')
     title: str = soup.find('h1', {'class': 'news-title'}).text.strip()
     description: str = soup.find('h2', {'class': 'news-stit'}).text.strip()
     content: str = soup.find('div', {'class': 'news-txt'}).text.strip()
