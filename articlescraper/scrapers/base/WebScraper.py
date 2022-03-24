@@ -1,6 +1,7 @@
 '''This module implements a superclass for all of the scraping modules.'''
 from threading import Thread, Lock
-from feedparser import parse as feedparse
+from requests import get
+from speedparser3 import parse
 from articlescraper.scrapers.base.Article import Article
 from articlescraper.scrapers.base.Feed import Feed
 
@@ -26,7 +27,8 @@ class WebScraper:
 
     def _parse_page(self, page: str, lang: str = "en", scraper_name: str = "unknown") -> None:
         '''This method parses a single page.'''
-        feed = feedparse(page)
+        xmldoc: str = get(page).text
+        feed = parse(xmldoc.encode("utf-8"))
         for entry in feed['entries']:
             self.feeds.append(Feed(entry['link'], entry['title'], lang, scraper_name))
 

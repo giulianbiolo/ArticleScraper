@@ -2,6 +2,6 @@ requests
 lxml
 beautifulsoup4
 levenshtein
-feedparser
+speedparser3
 windows-curses
 npyscreen
