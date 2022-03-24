@@ -5,6 +5,7 @@ It takes care of the graphical interface of the program.
 from time import sleep as wait
 from threading import Thread, Lock
 from weakref import CallableProxyType
+from requests import Session as ReqSession
 import npyscreen
 from articlescraper.scrapers.base.Feed import Feed
 from articlescraper.scrapers.Ansa import Ansa
@@ -31,6 +32,7 @@ class GUI(npyscreen.NPSAppManaged):
         self.browser: CallableProxyType[BrowserBox] = None
         self.article: CallableProxyType[ArticleBox] = None
         self.mutex: Lock = Lock()
+        self.session: ReqSession = ReqSession()
 
     def onStart(self):
         '''
@@ -52,7 +54,7 @@ class GUI(npyscreen.NPSAppManaged):
         '''
         threads: list[Thread] = []
         # modules: list = [ ..., YourAwesomeScraper(self.mutex)]
-        modules: list = [Ansa(self.mutex), WSJ(self.mutex)]
+        modules: list = [Ansa(self.mutex, self.session), WSJ(self.mutex, self.session)]
         for module in modules:
             threads.append(
                 Thread(target=module.load_feeds, args=(self.mutex,)))
