@@ -37,9 +37,9 @@ class ArticleBox(npyscreen.ActionForm):
 
     def on_back(self, _):
         '''This method handles the "go back" functionality.'''
-        self.parentApp.getForm("BROWSER").browsing_box.value = ""
-        self.parentApp.switchForm("BROWSER")
+        self.find_parent_app().getForm("BROWSER").browsing_box.value = ""
+        self.find_parent_app().switchForm("BROWSER")
 
     def on_quit(self, _):
         '''This method handles the quit functionality.'''
-        self.parentApp.switchForm(None)
+        self.find_parent_app().switchForm(None)

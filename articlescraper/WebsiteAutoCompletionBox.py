@@ -10,7 +10,7 @@ class AutoCompletionBox(npyscreen.Autocomplete):
 
     def auto_complete(self, _):
         '''This method handles the autocompletion of scrapers functionality.'''
-        modules: list[str] = ["All", "Ansa", "WallStreetJournal"]
+        modules: list[str] = ["All", "Ansa", "WallStreetJournal", "NewYorkTimes"]
         search: str = self.value.strip().lower()
         if search != "":
             modules = [module for module in modules if module.strip().lower().startswith(search)]

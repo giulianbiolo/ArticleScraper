@@ -1,6 +1,6 @@
 '''This module implements a superclass for all of the scraping modules.'''
 from threading import Thread, Lock
-from requests import Session
+from requests import get as reqget
 from speedparser3 import parse
 from articlescraper.scrapers.base.Article import Article
 from articlescraper.scrapers.base.Feed import Feed
@@ -9,18 +9,16 @@ from articlescraper.scrapers.base.Feed import Feed
 class WebScraper:
     '''This class represents a generic WebScraper.'''
 
-    def __init__(self, mutex: Lock, session: Session) -> None:
+    def __init__(self, mutex: Lock) -> None:
         '''This is the constructor of the class.'''
-        mutex.acquire()
-        self.loaded: bool = False
-        mutex.release()
+        with mutex:
+            self.loaded: bool = False
         self.feeds: list[Feed] = []
         self.articles_history: list[Article] = []
-        self.session: Session = session
 
     def _parse_page(self, page: str, lang: str = "en", scraper_name: str = "unknown") -> None:
         '''This method parses a single page.'''
-        xmldoc: str = self.session.get(page).text
+        xmldoc: str = reqget(page).text
         feed = parse(xmldoc.encode("utf-8"), clean_html=False)
         for entry in feed['entries']:
             self.feeds.append(Feed(entry['link'], entry['title'], lang, scraper_name))
@@ -35,9 +33,8 @@ class WebScraper:
             thread.start()
         for thread in threads:
             thread.join()
-        mutex.acquire()
-        self.loaded = True
-        mutex.release()
+        with mutex:
+            self.loaded = True
 
     def fetch_all(self) -> list[Feed]:
         '''This method returns all the already fetched feeds.'''

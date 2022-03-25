@@ -5,11 +5,11 @@ It takes care of the graphical interface of the program.
 from time import sleep as wait
 from threading import Thread, Lock
 from weakref import CallableProxyType
-from requests import Session as ReqSession
 import npyscreen
 from articlescraper.scrapers.base.Feed import Feed
 from articlescraper.scrapers.Ansa import Ansa
 from articlescraper.scrapers.WallStreetJournal import WSJ
+from articlescraper.scrapers.NewYorkTimes import NYT
 from articlescraper.BrowserBox import BrowserBox
 from articlescraper.ArticleBox import ArticleBox
 from articlescraper.LoadingForm import LoadingForm
@@ -32,7 +32,6 @@ class GUI(npyscreen.NPSAppManaged):
         self.browser: CallableProxyType[BrowserBox] = None
         self.article: CallableProxyType[ArticleBox] = None
         self.mutex: Lock = Lock()
-        self.session: ReqSession = ReqSession()
 
     def onStart(self):
         '''
@@ -54,7 +53,11 @@ class GUI(npyscreen.NPSAppManaged):
         '''
         threads: list[Thread] = []
         # modules: list = [ ..., YourAwesomeScraper(self.mutex)]
-        modules: list = [Ansa(self.mutex, self.session), WSJ(self.mutex, self.session)]
+        modules: list = [
+            Ansa(self.mutex),
+            WSJ(self.mutex),
+            NYT(self.mutex)
+        ]
         for module in modules:
             threads.append(
                 Thread(target=module.load_feeds, args=(self.mutex,)))
@@ -63,8 +66,8 @@ class GUI(npyscreen.NPSAppManaged):
         all_loaded: bool = False
         while not all_loaded:
             wait(0.1)
+            all_loaded = True
             with self.mutex:
-                all_loaded = True
                 for module in modules:
                     all_loaded = module.loaded
         all_feeds: list[Feed] = []

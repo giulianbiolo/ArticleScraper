@@ -47,11 +47,11 @@ class BrowserBox(npyscreen.ActionForm):
             npyscreen.notify_confirm("Article not found...")
             return
         title, description, body = load_article(article_link)
-        self.parentApp.getForm("ARTICLE").title_box.value = title
-        self.parentApp.getForm("ARTICLE").description_box.value = description
-        self.parentApp.getForm("ARTICLE").body_box.values = body.split("\n")
-        self.parentApp.switchForm("ARTICLE")
+        self.find_parent_app().getForm("ARTICLE").title_box.value = title
+        self.find_parent_app().getForm("ARTICLE").description_box.value = description
+        self.find_parent_app().getForm("ARTICLE").body_box.values = body.split("\n")
+        self.find_parent_app().switchForm("ARTICLE")
 
     def on_quit(self, _):
         '''This method handles the quit functionality.'''
-        self.parentApp.switchForm(None)
+        self.find_parent_app().switchForm(None)

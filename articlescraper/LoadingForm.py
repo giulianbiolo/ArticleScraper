@@ -29,15 +29,14 @@ class LoadingForm(npyscreen.ActionForm):
         feed_is_empty: bool = True
         while feed_is_empty:
             sleep(0.1)
-            self.parentApp.mutex.acquire()
-            feed_is_empty = self.parentApp.feeds is None
-            self.parentApp.mutex.release()
+            with self.find_parent_app().mutex:
+                feed_is_empty = self.find_parent_app().feeds is None
         self.loading_text.value = "Loading complete!"
         self.loading_text.set_relyx(
             self.useable_space()[0] // 2, self.useable_space()[1] // 2 - 8)
-        self.parentApp.switchForm("BROWSER")
+        self.find_parent_app().switchForm("BROWSER")
         self.display()
 
     def on_quit(self, _) -> None:
         '''This method handles the quit functionality.'''
-        self.parentApp.switchForm(None)
+        self.find_parent_app().switchForm(None)
