@@ -15,7 +15,7 @@ class LoadingForm(npyscreen.ActionForm):
         self.loading_text = self.add(
             npyscreen.TitleText, name="Loading...", w_id="loading")
         self.loading_text.set_relyx(
-            self.loading_text.rely + 7, self.loading_text.relx + 90)
+            self.useable_space()[0] // 2, self.useable_space()[1] // 2 - 5)
         self.loading_text.max_height = 3
         self.add_handlers({
             "^X": self.on_quit,
@@ -32,6 +32,8 @@ class LoadingForm(npyscreen.ActionForm):
             feed_is_empty = self.parentApp.feeds is None
             self.parentApp.mutex.release()
         self.loading_text.value = "Loading complete!"
+        self.loading_text.set_relyx(
+            self.useable_space()[0] // 2, self.useable_space()[1] // 2 - 8)
         self.parentApp.switchForm("BROWSER")
         self.display()
 
