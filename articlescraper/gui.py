@@ -56,7 +56,7 @@ class GUI(npyscreen.NPSAppManaged):
         modules: list = [
             Ansa(self.mutex),
             WSJ(self.mutex),
-            NYT(self.mutex)
+            # NYT(self.mutex)
         ]
         for module in modules:
             threads.append(
