@@ -29,6 +29,7 @@ class BrowserBox(npyscreen.ActionForm):
         self.browsing_btn.whenPressed = self.on_ok
         self.add_handlers({
             "^X": self.on_quit,
+            "^C": self.on_quit,
         })
 
     def on_ok(self):

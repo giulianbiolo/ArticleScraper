@@ -19,6 +19,7 @@ class LoadingForm(npyscreen.ActionForm):
         self.loading_text.max_height = 3
         self.add_handlers({
             "^X": self.on_quit,
+            "^C": self.on_quit,
         })
         self.listener = Thread(target=self.listen)
         self.listener.start()

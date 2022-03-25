@@ -28,6 +28,7 @@ class ArticleBox(npyscreen.ActionForm):
             "^B": self.on_back,
             "q": self.on_back,
             "^X": self.on_quit,
+            "^C": self.on_quit,
         })
 
     def on_ok(self):
